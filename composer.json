@@ -18,7 +18,9 @@
     },
     "require": {
         "php": ">=7.0",
-        "mews/captcha": "~2.0"
+        "mews/captcha": "~2.0",
+        "overtrue/easy-sms": "dev-master",
+        "yunpian/yunpian-php-sdk" : "~1.0"
     },
     "require-dev": {
         "notadd/installers": "0.5.*"
