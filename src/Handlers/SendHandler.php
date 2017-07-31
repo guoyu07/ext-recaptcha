@@ -9,20 +9,23 @@ namespace Notadd\BCaptcha\Handlers;
 
 use Notadd\BCaptcha\Models\Sms;
 use Notadd\Foundation\Routing\Abstracts\Handler;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Overtrue\EasySms\EasySms;
-
+use Illuminate\Container\Container;
 
 class SendHandler extends Handler
 {
+    protected $easySms;
 
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+        $config=require_once (__DIR__ . '/../../config/config.php');
+        $this->easySms = new EasySms($config);
+
+    }
 
     public function Execute()
     {
-        $config=require_once (__DIR__ . '/../../config/config.php');
-        $easySms = new EasySms($config);
 
         $this->validate($this->request, [
             'tel' => 'required|regex:/^1[34578][0-9]{9}$/',
@@ -33,7 +36,7 @@ class SendHandler extends Handler
         $ran=random_int(100000,999999);
         $tel=$this->request->tel;
 
-        $data=$easySms->send($tel, [
+        $data=$this->easySms->send($tel, [
             'template' => 'SMS_78895462',
             'data' => [
                 'code' => $ran

@@ -14,6 +14,7 @@ use Notadd\BCaptcha\Listeners\RouteRegister;
 use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
 use Mews\Captcha\Captcha;
 use Notadd\BCaptcha\Middlewares\CaptchaMiddleware;
+use Notadd\BCaptcha\Middlewares\SmsMiddleware;
 use Notadd\BCaptcha\Models\Sms;
 
 
@@ -28,6 +29,7 @@ class Extension extends AbstractExtension
     public function boot()
     {
         $this->app->make('router')->aliasMiddleware('captcha', CaptchaMiddleware::class);
+        $this->app->make('router')->aliasMiddleware('sms', SmsMiddleware::class);
         $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
         $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'cloud');
@@ -46,7 +48,7 @@ class Extension extends AbstractExtension
         $this->app['validator']->extend('code',function($attribute, $value, $parameters){
             $req=$this->app['request'];
             $sms=Sms::where('tel',$req->tel)->first();
-            if($sms->code==$value&&600>=time()-$sms->updated_at) return true;
+            if($sms&&$sms->code==$value&&600>=time()-$sms->updated_at->getTimestamp()) return true;
             else return false;
         });
 

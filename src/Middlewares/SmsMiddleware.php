@@ -28,7 +28,7 @@ class SmsMiddleware  extends  VerifyCsrfToken
                 if ($request->expectsJson()) {
                     return response()->json('验证码验证不通过', 402);
                 }
-                return redirect()->route('/');
+                return response()->json('验证码验证不通过', 402);
             } else {
                 return $next($request);
             }
