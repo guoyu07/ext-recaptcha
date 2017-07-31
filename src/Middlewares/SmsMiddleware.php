@@ -14,12 +14,15 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 
-class CaptchaMiddleware  extends  VerifyCsrfToken
+class SmsMiddleware  extends  VerifyCsrfToken
 {
 
     public function handle($request, Closure $next)
     {
-            $rules = ['captcha' => 'required|captcha'];
+            $rules = [
+                'code' => 'required|code',
+                'tel'=>'required|regex:/^1[34578][0-9]{9}$/'
+            ];
             $validator = Validator::make(Input::all(), $rules);
             if ($validator->fails()) {
                 if ($request->expectsJson()) {

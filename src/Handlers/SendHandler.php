@@ -7,7 +7,7 @@
  */
 namespace Notadd\BCaptcha\Handlers;
 
-use Notadd\BCaptcha\Models\Captcha;
+use Notadd\BCaptcha\Models\Sms;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
@@ -33,7 +33,6 @@ class SendHandler extends Handler
         $ran=random_int(100000,999999);
         $tel=$this->request->tel;
 
-
         $data=$easySms->send($tel, [
             'template' => 'SMS_78895462',
             'data' => [
@@ -45,8 +44,9 @@ class SendHandler extends Handler
             return $this->withCode(400)->withError('发送验证码失败!');
         }
 
-        $exist=Captcha::where('tel',$tel)->first();
-        $captcha=$exist?$exist:new Captcha();
+        $exist=Sms::where('tel',$tel)->first();
+
+        $captcha=$exist?$exist:new Sms();
         $captcha->tel=$tel;
         $captcha->code=$ran;
         if($captcha->save()){

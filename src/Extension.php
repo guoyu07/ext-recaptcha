@@ -14,6 +14,8 @@ use Notadd\BCaptcha\Listeners\RouteRegister;
 use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
 use Mews\Captcha\Captcha;
 use Notadd\BCaptcha\Middlewares\CaptchaMiddleware;
+use Notadd\BCaptcha\Models\Sms;
+
 
 /**
  * Class Extension.
@@ -39,6 +41,13 @@ class Extension extends AbstractExtension
         // Validator extensions
         $this->app['validator']->extend('captcha', function ($attribute, $value, $parameters) {
             return captcha_check($value);
+        });
+
+        $this->app['validator']->extend('code',function($attribute, $value, $parameters){
+            $req=$this->app['request'];
+            $sms=Sms::where('tel',$req->tel)->first();
+            if($sms->code==$value&&600>=time()-$sms->updated_at) return true;
+            else return false;
         });
 
     }
