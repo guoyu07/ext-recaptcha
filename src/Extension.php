@@ -13,6 +13,7 @@ use Notadd\BCaptcha\Listeners\CsrfTokenRegister;
 use Notadd\BCaptcha\Listeners\RouteRegister;
 use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
 use Mews\Captcha\Captcha;
+
 /**
  * Class Extension.
  */
@@ -28,19 +29,15 @@ class Extension extends AbstractExtension
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'cloud');
         $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
 
-
         // Publish configuration files
         $this->publishes([
-            __DIR__.'/../vendor/mews/captcha/config/captcha.php' => config_path('captcha.php')
+            __DIR__ . '/../vendor/mews/captcha/config/captcha.php' => config_path('captcha.php'),
         ], 'config');
 
         // Validator extensions
-        $this->app['validator']->extend('captcha', function($attribute, $value, $parameters)
-        {
+        $this->app['validator']->extend('captcha', function ($attribute, $value, $parameters) {
             return captcha_check($value);
         });
-
-
 
     }
 
@@ -126,10 +123,9 @@ class Extension extends AbstractExtension
     {
         // Merge configs
         $this->mergeConfigFrom(
-            __DIR__.'/../vendor/mews/captcha/config/captcha.php', 'captcha'
+            __DIR__ . '/../vendor/mews/captcha/config/captcha.php', 'captcha'
         );
-        $this->app->singleton('captcha', function($app)
-        {
+        $this->app->singleton('captcha', function ($app) {
             return new Captcha(
                 $app['Illuminate\Filesystem\Filesystem'],
                 $app['Illuminate\Config\Repository'],
