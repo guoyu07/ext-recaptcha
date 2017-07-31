@@ -7,6 +7,7 @@
  */
 namespace Notadd\BCaptcha\Controllers;
 
+use Notadd\BCaptcha\Handlers\GetImgHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 
 use Illuminate\Support\Facades\Request;
@@ -20,32 +21,6 @@ use Illuminate\Support\Facades\Input;
  */
 class HomeController extends Controller
 {
-
-    public function test()
-    {
-
-        if (Request::getMethod() == 'POST')
-        {
-            $rules = ['captcha' => 'required|captcha'];
-            $validator = Validator::make(Input::all(), $rules);
-            if ($validator->fails())
-            {
-                echo '<p style="color: #ff0000;">Incorrect!</p>';
-            }
-            else
-            {
-                echo '<p style="color: #00ff30;">Matched :)</p>';
-            }
-        } elseif(Request::getMethod() == 'GET'){
-            $form = '<form method="post" '.' action="'.route('test').'">';
-            $form .= '<input type="hidden" name="_token" value="' . csrf_token() . '">';
-            $form .= '<p>' . captcha_img() . '</p>';
-            $form .= '<p><input type="text" name="captcha"></p>';
-            $form .= '<p><button type="submit" name="check">Check</button></p>';
-            $form .= '</form>';
-            return $form;
-        }
-    }
     public function wrong()
     {
         return json_encode(['code' => 402, 'msg' => '验证码输入错误']);
@@ -53,8 +28,7 @@ class HomeController extends Controller
 
     public function getCha()
     {
-//        return captcha_img();
-        $form = '<form method="post" '.' action="'.route('postCha').'">';
+        $form = '<form method="post" '.' action="'.route('captcha').'">';
         $form .= '<input type="hidden" name="_token" value="' . csrf_token() . '">';
         $form .= '<p>' . captcha_img() . '</p>';
         $form .= '<p><input type="text" name="captcha"></p>';
@@ -63,7 +37,7 @@ class HomeController extends Controller
         return $form;
     }
 
-    public function postCha()
+    public function captcha()
     {
         $rules = ['captcha' => 'required|captcha'];
         $validator = Validator::make(Input::all(), $rules);
@@ -75,6 +49,11 @@ class HomeController extends Controller
         {
             echo '<p style="color: #00ff30;">Matched :)</p>';
         }
+    }
+
+    public function getImg(GetImgHandler $handler)
+    {
+        return $handler->toResponse()->generateHttpResponse();
     }
 
 

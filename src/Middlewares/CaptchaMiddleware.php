@@ -22,7 +22,10 @@ class CaptchaMiddleware  extends  VerifyCsrfToken
             $rules = ['captcha' => 'required|captcha'];
             $validator = Validator::make(Input::all(), $rules);
             if ($validator->fails()) {
-                return redirect()->route('captcha');
+                if ($request->expectsJson()) {
+                    return response()->json('验证码验证不通过', 402);
+                }
+                return redirect()->route('/');
             } else {
                 return $next($request);
             }
