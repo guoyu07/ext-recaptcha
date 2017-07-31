@@ -13,6 +13,7 @@ use Notadd\BCaptcha\Listeners\CsrfTokenRegister;
 use Notadd\BCaptcha\Listeners\RouteRegister;
 use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
 use Mews\Captcha\Captcha;
+use Notadd\BCaptcha\Middlewares\CaptchaMiddleware;
 
 /**
  * Class Extension.
@@ -24,6 +25,7 @@ class Extension extends AbstractExtension
      */
     public function boot()
     {
+        $this->app->make('router')->aliasMiddleware('captcha', CaptchaMiddleware::class);
         $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
         $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'cloud');

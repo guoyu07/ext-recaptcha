@@ -29,6 +29,6 @@ class CsrfTokenRegister extends EventSubscriber
      */
     public function handle(CsrfTokenRegisterEvent $event)
     {
-        $event->registerExcept('captcha*');
+        $event->registerExcept('api/captcha*');
     }
 }
