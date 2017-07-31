@@ -5,34 +5,43 @@
  * @copyright (c) 2017, notadd.com
  * @datetime      17-6-23 下午3:31
  */
-namespace Notadd\Captcha\Handlers;
+namespace Notadd\BCaptcha\Handlers;
 
 use Notadd\Foundation\Routing\Abstracts\Handler;
-use Illuminate\Container\Container;
-use Notadd\Captcha\Captcha;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+
 
 
 class TestHandler extends Handler
 {
-    /**
-     * @var \Notadd\Cloud\Cloud
-     */
-    protected $captcha;
 
-    /**
-     * TestHandler constructor.
-     *
-     * @param \Illuminate\Container\Container $container
-     * @param \Notadd\Captcha\Captcha         $captcha
-     */
-    public function __construct(Container $container, Captcha $captcha)
-    {
-        parent::__construct($container);
-        $this->captcha = $captcha;
-    }
 
     public function Execute()
     {
-       dd(11111);
+
+        if (Request::getMethod() == 'POST')
+        {
+            $rules = ['captcha' => 'required|captcha'];
+            $validator = Validator::make(Input::all(), $rules);
+            if ($validator->fails())
+            {
+                echo '<p style="color: #ff0000;">Incorrect!</p>';
+            }
+            else
+            {
+                echo '<p style="color: #00ff30;">Matched :)</p>';
+            }
+        }
+
+        $form = '<form method="post" action="captcha-test">';
+        $form .= '<input type="hidden" name="_token" value="' . csrf_token() . '">';
+        $form .= '<p>' . captcha_img() . '</p>';
+        $form .= '<p><input type="text" name="captcha"></p>';
+        $form .= '<p><button type="submit" name="check">Check</button></p>';
+        $form .= '</form>';
+        return $form;
+
     }
 }

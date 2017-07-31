@@ -6,13 +6,13 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-02-23 19:36
  */
-namespace Notadd\Captcha;
+namespace Notadd\BCaptcha;
 
 use Illuminate\Events\Dispatcher;
-use Notadd\Captcha\Listeners\CsrfTokenRegister;
-use Notadd\Captcha\Listeners\RouteRegister;
+use Notadd\BCaptcha\Listeners\CsrfTokenRegister;
+use Notadd\BCaptcha\Listeners\RouteRegister;
 use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
-
+use Mews\Captcha\Captcha;
 /**
  * Class Extension.
  */
@@ -26,11 +26,22 @@ class Extension extends AbstractExtension
         $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
         $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'cloud');
-        $this->loadViewsFrom(realpath(__DIR__ . '/../resources/views'), 'cloud');
-        $this->publishes([
-            realpath(__DIR__ . '/../resources/mixes/administration/dist/assets/extensions/notadd/cloud') => public_path('assets/extensions/notadd/cloud'),
-        ], 'public');
         $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
+
+
+        // Publish configuration files
+        $this->publishes([
+            __DIR__.'/../vendor/mews/captcha/config/captcha.php' => config_path('captcha.php')
+        ], 'config');
+
+        // Validator extensions
+        $this->app['validator']->extend('captcha', function($attribute, $value, $parameters)
+        {
+            return captcha_check($value);
+        });
+
+
+
     }
 
     /**
@@ -113,10 +124,20 @@ class Extension extends AbstractExtension
 
     public function register()
     {
-        $this->app->singleton('captcha', function ($app) {
-            return new FileManager($app);
+        // Merge configs
+        $this->mergeConfigFrom(
+            __DIR__.'/../vendor/mews/captcha/config/captcha.php', 'captcha'
+        );
+        $this->app->singleton('captcha', function($app)
+        {
+            return new Captcha(
+                $app['Illuminate\Filesystem\Filesystem'],
+                $app['Illuminate\Config\Repository'],
+                $app['Intervention\Image\ImageManager'],
+                $app['Illuminate\Session\Store'],
+                $app['Illuminate\Hashing\BcryptHasher'],
+                $app['Illuminate\Support\Str']
+            );
         });
     }
-
-
 }

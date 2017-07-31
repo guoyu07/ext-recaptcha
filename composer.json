@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Notadd\\Captcha\\": "src/"
+            "Notadd\\BCaptcha\\": "src/"
         }
     },
     "require": {

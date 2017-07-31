@@ -6,7 +6,7 @@
  * @copyright (c) 2017, iBenchu.org
  * @datetime 2017-05-22 16:27
  */
-namespace Notadd\Captcha\Listeners;
+namespace Notadd\BCaptcha\Listeners;
 
 use Notadd\Foundation\Event\Abstracts\EventSubscriber;
 use Notadd\Foundation\Http\Events\CsrfTokenRegister as CsrfTokenRegisterEvent;
@@ -29,6 +29,6 @@ class CsrfTokenRegister extends EventSubscriber
      */
     public function handle(CsrfTokenRegisterEvent $event)
     {
-        $event->registerExcept('api/captcha*');
+        $event->registerExcept('captcha*');
     }
 }

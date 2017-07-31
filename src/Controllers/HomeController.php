@@ -5,26 +5,24 @@
  * Date: 17-6-17
  * Time: 下午2:02
  */
-namespace Notadd\Captcha\Controllers;
+namespace Notadd\BCaptcha\Controllers;
 
 use Notadd\Foundation\Routing\Abstracts\Controller;
 
-use Notadd\Captcha\Handlers\TestHandler;
+use Notadd\BCaptcha\Handlers\TestHandler;
 
 
 
 /**
  * Class ManagerController.
  */
-class CaptchaController extends Controller
+class HomeController extends Controller
 {
 
     public function test(TestHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
-
-
 
 
 }
