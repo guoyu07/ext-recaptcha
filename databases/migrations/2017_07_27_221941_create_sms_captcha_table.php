@@ -14,7 +14,7 @@ class CreateSmsCaptchaTable extends Migration
     public function up() {
         Schema::create('sms_captcha', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('tel')->nullable()->index();
+            $table->string('tel',13)->nullable()->unique();
             $table->integer('code')->nullable();
             $table->timestamps();
         });
