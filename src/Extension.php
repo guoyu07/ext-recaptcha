@@ -48,7 +48,12 @@ class Extension extends AbstractExtension
         $this->app['validator']->extend('code',function($attribute, $value, $parameters){
             $req=$this->app['request'];
             $sms=Sms::where('tel',$req->tel)->first();
-            if($sms&&$sms->code==$value&&600>=time()-$sms->updated_at->getTimestamp()) return true;
+            if($sms&&$sms->is_valid&&$sms->code==$value&&600>=time()-$sms->updated_at->getTimestamp()) {
+                $sms->is_valid=false;
+                if($sms->save()){
+                    return true;
+                }else return false;
+            }
             else return false;
         });
 
