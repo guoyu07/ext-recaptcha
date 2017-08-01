@@ -9,19 +9,43 @@
 namespace Notadd\BCaptcha;
 
 use Illuminate\Events\Dispatcher;
+use Mews\Captcha\Captcha;
 use Notadd\BCaptcha\Listeners\CsrfTokenRegister;
 use Notadd\BCaptcha\Listeners\RouteRegister;
-use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
-use Mews\Captcha\Captcha;
 use Notadd\BCaptcha\Middlewares\CaptchaMiddleware;
 use Notadd\BCaptcha\Models\Sms;
-
+use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
 
 /**
  * Class Extension.
  */
 class Extension extends AbstractExtension
 {
+    /**
+     * Get script of extension.
+     *
+     * @return string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function script()
+    {
+//        return asset('assets/extensions/notadd/cloud/js/extension.min.js');
+        return '';
+    }
+
+    /**
+     * Get stylesheet of extension.
+     *
+     * @return array
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function stylesheet()
+    {
+        return [
+//            asset('assets/extensions/notadd/cloud/css/extension.min.css'),
+        ];
+    }
+
     /**
      * Boot provider.
      */
@@ -43,13 +67,12 @@ class Extension extends AbstractExtension
             return captcha_check($value);
         });
 
-        $this->app['validator']->extend('code',function($attribute, $value, $parameters){
-            $req=$this->app['request'];
-            $sms=Sms::where('tel',$req->tel)->first();
-            if($sms->code==$value&&600>=time()-$sms->updated_at) return true;
+        $this->app['validator']->extend('code', function ($attribute, $value, $parameters) {
+            $req = $this->app['request'];
+            $sms = Sms::query()->where('tel', $req->tel)->first();
+            if ($sms->code == $value && 600 >= time() - $sms->updated_at) return true;
             else return false;
         });
-
     }
 
     /**
@@ -84,28 +107,22 @@ class Extension extends AbstractExtension
         return '验证码';
     }
 
-    /**
-     * Get script of extension.
-     *
-     * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    public static function script()
+    public function register()
     {
-        return asset('assets/extensions/notadd/cloud/js/extension.min.js');
-    }
-
-    /**
-     * Get stylesheet of extension.
-     *
-     * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    public static function stylesheet()
-    {
-        return [
-            asset('assets/extensions/notadd/cloud/css/extension.min.css'),
-        ];
+        // Merge configs
+        $this->mergeConfigFrom(
+            __DIR__ . '/../vendor/mews/captcha/config/captcha.php', 'captcha'
+        );
+        $this->app->singleton('captcha', function ($app) {
+            return new Captcha(
+                $app['Illuminate\Filesystem\Filesystem'],
+                $app['Illuminate\Config\Repository'],
+                $app['Intervention\Image\ImageManager'],
+                $app['Illuminate\Session\Store'],
+                $app['Illuminate\Hashing\BcryptHasher'],
+                $app['Illuminate\Support\Str']
+            );
+        });
     }
 
     /**
@@ -128,23 +145,5 @@ class Extension extends AbstractExtension
     public static function version()
     {
         return '0.1.0';
-    }
-
-    public function register()
-    {
-        // Merge configs
-        $this->mergeConfigFrom(
-            __DIR__ . '/../vendor/mews/captcha/config/captcha.php', 'captcha'
-        );
-        $this->app->singleton('captcha', function ($app) {
-            return new Captcha(
-                $app['Illuminate\Filesystem\Filesystem'],
-                $app['Illuminate\Config\Repository'],
-                $app['Intervention\Image\ImageManager'],
-                $app['Illuminate\Session\Store'],
-                $app['Illuminate\Hashing\BcryptHasher'],
-                $app['Illuminate\Support\Str']
-            );
-        });
     }
 }
