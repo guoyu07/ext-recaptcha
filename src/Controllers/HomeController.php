@@ -9,6 +9,8 @@ namespace Notadd\BCaptcha\Controllers;
 
 use Notadd\BCaptcha\Handlers\GetImgHandler;
 use Notadd\BCaptcha\Handlers\SendHandler;
+use Notadd\BCaptcha\Handlers\GetSmsAliconfHandler;
+use Notadd\BCaptcha\Handlers\SetSmsAliconfHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -51,6 +53,16 @@ class HomeController extends Controller
         {
             echo '<p style="color: #00ff30;">Matched :)</p>';
         }
+    }
+
+    public function getSmsAliConf(GetSmsAliConfHandler $handler)
+    {
+        return $handler->toResponse()->generateHttpResponse();
+    }
+
+    public function setSmsAliConf(SetSmsAliConfHandler $handler)
+    {
+        return $handler->toResponse()->generateHttpResponse();
     }
 
     public function abc()

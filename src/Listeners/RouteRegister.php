@@ -23,14 +23,28 @@ class RouteRegister extends AbstractRouteRegister
      */
     public function handle()
     {
+        $this->router->get('captcha/{config?}', CaptchaController::class . '@getCaptcha')->middleware('web');
+
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/captcha'], function () {
             $this->router->post('getimg', HomeController::class . '@getImg')->name('getimg');
             $this->router->post('catpcha', HomeController::class . '@captcha')->name('captcha');
             $this->router->post('getcha', HomeController::class . '@getCha');
+
+
+
+        });
+        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/sms'], function () {
+
             $this->router->any('send',HomeController::class . '@send')->name('send');
             $this->router->any('abc',HomeController::class . '@abc')->name('abc')->middleware('sms');
+
+            $this->router->group([ 'prefix' => 'conf/ali'], function () {
+                $this->router->post('get',HomeController::class . '@getSmsAliConf');
+                $this->router->post('set',HomeController::class . '@setSmsAliConf');
+            });
+
         });
-        $this->router->get('captcha/{config?}', CaptchaController::class . '@getCaptcha')->middleware('web');
+
     }
 
 }

@@ -11,14 +11,15 @@ use Illuminate\Container\Container;
 use Notadd\BCaptcha\Models\Sms;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Overtrue\EasySms\EasySms;
-
+use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 class SendHandler extends Handler
 {
     protected $easySms;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container,SettingsRepository $settings)
     {
         parent::__construct($container);
+        $this->setting=$settings;
         $config = require_once(__DIR__ . '/../../config/config.php');
         $this->easySms = new EasySms($config);
     }
