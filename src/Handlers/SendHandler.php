@@ -52,6 +52,7 @@ class SendHandler extends Handler
         $captcha=$exist?$exist:new Sms();
         $captcha->tel=$tel;
         $captcha->code=$ran;
+        $captcha->is_valid=true;
         if($captcha->save()){
             return $this->withCode(200)->withData(true)->withMessage('发送成功');
         }else{

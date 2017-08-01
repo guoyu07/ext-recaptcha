@@ -29,9 +29,6 @@ return [
         'errorlog' => [
             'file' => '/tmp/easy-sms.log',
         ],
-//        'yunpian' => [
-//            'api_key' => 'd259c1a6ad15fc1e081568374a3c0887',
-//        ],
         'aliyun' => [
             'access_key_id' => 'LTAIgzlakVb0DZd3',
             'access_key_secret' => 'PUoTmKqpGfkzSWHF4tIqjq6z3Vam8o',
@@ -41,6 +38,9 @@ return [
             'app_key' => 'LTAIgzlakVb0DZd3',
             'app_secret' => 'PUoTmKqpGfkzSWHF4tIqjq6z3Vam8o',
             'sign_name' => '中农微信采供系统',
+        ],
+        'yunpian' => [
+            'api_key' => 'd259c1a6ad15fc1e081568374a3c0887',
         ],
     ],
 
