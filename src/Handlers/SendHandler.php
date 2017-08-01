@@ -7,10 +7,10 @@
  */
 namespace Notadd\BCaptcha\Handlers;
 
+use Illuminate\Container\Container;
 use Notadd\BCaptcha\Models\Sms;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Overtrue\EasySms\EasySms;
-use Illuminate\Container\Container;
 
 class SendHandler extends Handler
 {
@@ -19,45 +19,42 @@ class SendHandler extends Handler
     public function __construct(Container $container)
     {
         parent::__construct($container);
-        $config=require_once (__DIR__ . '/../../config/config.php');
+        $config = require_once(__DIR__ . '/../../config/config.php');
         $this->easySms = new EasySms($config);
-
     }
 
     public function Execute()
     {
-
         $this->validate($this->request, [
             'tel' => 'required|regex:/^1[34578][0-9]{9}$/',
         ], [
             'tel.required' => '请输入手机号',
         ]);
 
-        $ran=random_int(100000,999999);
-        $tel=$this->request->tel;
+        $ran = random_int(100000, 999999);
+        $tel = $this->request->tel;
 
-        $data=$this->easySms->send($tel, [
+        $data = $this->easySms->send($tel, [
             'template' => 'SMS_78895462',
-            'data' => [
-                'code' => $ran
+            'data'     => [
+                'code' => $ran,
             ],
         ]);
 
-        if(!is_array($data)){
+        if (!is_array($data)) {
             return $this->withCode(400)->withError('发送验证码失败!');
         }
 
-        $exist=Sms::where('tel',$tel)->first();
+        $exist = Sms::where('tel', $tel)->first();
 
-        $captcha=$exist?$exist:new Sms();
-        $captcha->tel=$tel;
-        $captcha->code=$ran;
-        $captcha->is_valid=true;
-        if($captcha->save()){
+
+        $captcha = $exist ? $exist : new Sms();
+        $captcha->tel = $tel;
+        $captcha->code = $ran;
+        if ($captcha->save()) {
             return $this->withCode(200)->withData(true)->withMessage('发送成功');
-        }else{
+        } else {
             return $this->withCode(201)->withError('发送成功');
         }
-
     }
 }
