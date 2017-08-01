@@ -19,9 +19,9 @@ class Helper
     {
         $this->settings = $settings;
     }
-    public function getSmsCogfig()
+    public function getSmsConfig()
     {
-        $config= [
+        return  [
             // HTTP 请求的超时时间（秒）
             'timeout' => 5.0,
 
@@ -58,7 +58,7 @@ class Helper
             ],
 
         ];
-        return $config;
+
     }
 
 }

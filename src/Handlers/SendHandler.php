@@ -12,16 +12,18 @@ use Notadd\BCaptcha\Models\Sms;
 use Notadd\Foundation\Routing\Abstracts\Handler;
 use Overtrue\EasySms\EasySms;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
+use Notadd\BCaptcha\Helper;
+
 class SendHandler extends Handler
 {
     protected $easySms;
+    protected $settings;
 
-    public function __construct(Container $container,SettingsRepository $settings)
+    public function __construct(Container $container,SettingsRepository $settings,Helper $helper)
     {
         parent::__construct($container);
-        $this->setting=$settings;
-        $config = require_once(__DIR__ . '/../../config/config.php');
-        $this->easySms = new EasySms($config);
+        $this->settings=$settings;
+        $this->easySms = new EasySms($helper->getSmsConfig());
     }
 
     public function Execute()
@@ -36,7 +38,7 @@ class SendHandler extends Handler
         $tel = $this->request->tel;
 
         $data = $this->easySms->send($tel, [
-            'template' => 'SMS_78895462',
+            'template' => $this->settings->get('aliyun.template'),
             'data'     => [
                 'code' => $ran,
             ],
