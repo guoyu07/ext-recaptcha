@@ -33,10 +33,10 @@ class GetSmsAliconfHandler extends DataHandler
     public function data()
     {
         return [
-            'bucketName' => $this->settings->get('upyun.bucketName'),
-            'operatorName' => $this->settings->get('upyun.operatorName'),
-            'operatorPassword' => $this->settings->get('upyun.operatorPassword'),
-            'domain' =>$this->settings->get('upyun.domain'),
+            'access_key_id' => $this->settings->get('aliyun.ak_id'),
+            'access_key_secret' => $this->settings->get('aliyun.ak_secret'),
+            'sign_name' => $this->settings->get('aliyun.sign_name'),
+            'template' =>$this->settings->get('aliyun.template'),
         ];
     }
 

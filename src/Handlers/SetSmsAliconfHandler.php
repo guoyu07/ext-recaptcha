@@ -5,6 +5,7 @@ namespace Notadd\BCaptcha\Handlers;
 use Illuminate\Container\Container;
 use Notadd\Foundation\Setting\Contracts\SettingsRepository;
 use Notadd\Foundation\Passport\Abstracts\SetHandler as AbstractSetHandler;
+
 /**
  * Class SetUpyunconfHandler.
  */
@@ -34,12 +35,13 @@ class SetSmsAliconfHandler extends AbstractSetHandler
      */
     public function data()
     {
-        $data=$this->settings->all()->toArray();
-        return array_only($data,[
-            'upyun.bucketName',
-            'upyun.operatorName',
-            'upyun.operatorPassword',
-            'upyun.domain',
+        $data = $this->settings->all()->toArray();
+
+        return array_only($data, [
+            'aliyun.ak_id',
+            'aliyun.ak_secret',
+            'aliyun.sign_name',
+            'aliyun.template',
         ]);
     }
 
@@ -47,7 +49,7 @@ class SetSmsAliconfHandler extends AbstractSetHandler
     {
 
         return [
-            '修改设置成功!'
+            '修改设置成功!',
         ];
     }
 
@@ -70,28 +72,26 @@ class SetSmsAliconfHandler extends AbstractSetHandler
      */
     public function execute()
     {
-        $this->validate($this->request,[
-            'bucketName'=>'required|alpha_dash',
-            'operatorName'=>'required|alpha_dash',
-            'operatorPassword'=>'required|alpha_dash',
-            'domain'=>'required|active_url'
-        ],[
-            'operatorName.required'=>'operatorName不能为空',
-            'operatorName.alpha_dash'=>'operatorName由字母数字下划线组成',
-            'operatorPassword.required'=>'operatorPassword不能为空',
-            'operatorPassword.ralpha_dash'=>'operatorPassword由数字字母下滑线组成',
-            'bucketName.required'=>'bucketName不能为空',
-            'bucketName.alpha_dash'=>'bucketName由数字字母下滑线组成',
-            'domain.required'=>'域名不能为空',
-            'domain.active_url'=>'域名必须为有效的域名'
+        $this->validate($this->request, [
+            'access_key_id'     => 'required|alpha_dash',
+            'access_key_secret' => 'required|alpha_dash',
+            'sign_name'         => 'required',
+            'template'          => 'required',
+        ], [
+            'access_key_id.required'        => 'access_key_id不能为空',
+            'access_key_id.alpha_dash'      => 'access_key_id由字母数字下划线组成',
+            'access_key_secret.required'    => 'access_key_secret不能为空',
+            'access_key_secret.ralpha_dash' => 'access_key_secret由数字字母下滑线组成',
+            'sign_name.required'            => 'bucketName不能为空',
+            'template.required'             => '域名不能为空',
         ]);
-        $this->settings->set('upyun.bucketName', $this->request->input('bucketName'));
-        $this->settings->set('upyun.operatorName', $this->request->input('operatorName'));
-        $this->settings->set('upyun.operatorPassword', $this->request->input('operatorPassword'));
-        $this->settings->set('upyun.domain', $this->request->input('domain'));
+        $this->settings->set('aliyun.ak_id', $this->request->input('access_key_id'));
+        $this->settings->set('aliyun.ak_secret', $this->request->input('access_key_secret'));
+        $this->settings->set('aliyun.sign_name', $this->request->input('sign_name'));
+        $this->settings->set('aliyun.template', $this->request->input('template'));
+
         return true;
     }
-
 
 }
 
