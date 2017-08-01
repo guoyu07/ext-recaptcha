@@ -17,7 +17,6 @@ use Notadd\BCaptcha\Middlewares\CaptchaMiddleware;
 use Notadd\BCaptcha\Middlewares\SmsMiddleware;
 use Notadd\BCaptcha\Models\Sms;
 
-
 /**
  * Class Extension.
  */
@@ -45,16 +44,19 @@ class Extension extends AbstractExtension
             return captcha_check($value);
         });
 
-        $this->app['validator']->extend('code',function($attribute, $value, $parameters){
-            $req=$this->app['request'];
-            $sms=Sms::where('tel',$req->tel)->first();
-            if($sms&&$sms->is_valid&&$sms->code==$value&&600>=time()-$sms->updated_at->getTimestamp()) {
-                $sms->is_valid=false;
-                if($sms->save()){
+        $this->app['validator']->extend('code', function ($attribute, $value, $parameters) {
+            $req = $this->app['request'];
+            $sms = Sms::where('tel', $req->tel)->first();
+            if ($sms && $sms->is_valid && $sms->code == $value && 600 >= time() - $sms->updated_at->getTimestamp()) {
+                $sms->is_valid = false;
+                if ($sms->save()) {
                     return true;
-                }else return false;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
-            else return false;
         });
 
     }
