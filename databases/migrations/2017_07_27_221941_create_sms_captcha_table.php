@@ -16,6 +16,7 @@ class CreateSmsCaptchaTable extends Migration
             $table->increments('id');
             $table->string('tel',13)->nullable()->unique();
             $table->integer('code')->nullable();
+            $table->boolean('is_valid')->nullable()->default(true);
             $table->timestamps();
         });
     }
