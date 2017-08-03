@@ -8,9 +8,6 @@
 namespace Notadd\BCaptcha\Controllers;
 
 use Notadd\BCaptcha\Handlers\GetImgHandler;
-use Notadd\BCaptcha\Handlers\SendHandler;
-use Notadd\BCaptcha\Handlers\GetSmsAliconfHandler;
-use Notadd\BCaptcha\Handlers\SetSmsAliconfHandler;
 use Notadd\Foundation\Routing\Abstracts\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -20,11 +17,6 @@ use Illuminate\Support\Facades\Validator;
  */
 class HomeController extends Controller
 {
-
-    public function send(SendHandler $handler)
-    {
-        return $handler->toResponse()->generateHttpResponse();
-    }
 
     public function getImg(GetImgHandler $handler)
     {
@@ -55,22 +47,6 @@ class HomeController extends Controller
         }
     }
 
-    public function getSmsAliConf(GetSmsAliConfHandler $handler)
-    {
-        return $handler->toResponse()->generateHttpResponse();
-    }
-
-    public function setSmsAliConf(SetSmsAliConfHandler $handler)
-    {
-        return $handler->toResponse()->generateHttpResponse();
-    }
-
-
-
-    public function abc()
-    {
-        dd(1111);
-    }
 
 
 }

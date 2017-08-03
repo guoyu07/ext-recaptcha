@@ -53,11 +53,10 @@ class Extension extends AbstractExtension
     public function boot()
     {
         $this->app->make('router')->aliasMiddleware('captcha', CaptchaMiddleware::class);
-        $this->app->make('router')->aliasMiddleware('sms', SmsMiddleware::class);
         $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
         $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'cloud');
-        $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
+//        $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
 
         // Publish configuration files
         $this->publishes([
@@ -69,20 +68,6 @@ class Extension extends AbstractExtension
             return captcha_check($value);
         });
 
-        $this->app['validator']->extend('code', function ($attribute, $value, $parameters) {
-            $req = $this->app['request'];
-            $sms = Sms::query()->where('tel', $req->tel)->first();
-            if ($sms && $sms->is_valid && $sms->code == $value && 600 >= time() - $sms->updated_at->getTimestamp()) {
-                $sms->is_valid = false;
-                if ($sms->save()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        });
     }
 
     /**
