@@ -17,12 +17,19 @@ use Illuminate\Support\Facades\Validator;
  */
 class HomeController extends Controller
 {
-
+    /**
+     * @param \Notadd\BCaptcha\Handlers\GetImgHandler $handler
+     *
+     * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
+     */
     public function getImg(GetImgHandler $handler)
     {
         return $handler->toResponse()->generateHttpResponse();
     }
 
+    /**
+     * @return string
+     */
     public function test()
     {
         $form = '<form method="post" action="'.route('captcha').'">';
@@ -33,6 +40,10 @@ class HomeController extends Controller
         $form .= '</form>';
         return $form;
     }
+
+    /**
+     *
+     */
     public function captcha()
     {
         $rules = ['captcha' => 'required|captcha'];

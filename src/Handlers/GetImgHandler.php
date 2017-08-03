@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 
-
-
+/**
+ * Class GetImgHandler.
+ */
 class GetImgHandler extends Handler
 {
-
-
+    /**
+     * @return $this
+     */
     public function Execute()
     {
         $data=captcha_src();

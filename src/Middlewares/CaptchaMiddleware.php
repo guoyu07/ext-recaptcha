@@ -16,7 +16,12 @@ use Illuminate\Support\Facades\Input;
 
 class CaptchaMiddleware  extends  VerifyCsrfToken
 {
-
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
     public function handle($request, Closure $next)
     {
             $rules = ['captcha' => 'required|captcha'];
