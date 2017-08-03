@@ -28,8 +28,7 @@ class RouteRegister extends AbstractRouteRegister
         $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/captcha'], function () {
             $this->router->post('getimg', HomeController::class . '@getImg')->name('getimg');
             $this->router->post('catpcha', HomeController::class . '@captcha')->name('captcha');
-            $this->router->post('getcha', HomeController::class . '@getCha');
-
+            $this->router->post('test', HomeController::class . '@test');
         });
 
     }

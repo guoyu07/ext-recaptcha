@@ -23,7 +23,7 @@ class HomeController extends Controller
         return $handler->toResponse()->generateHttpResponse();
     }
 
-    public function getCha()
+    public function test()
     {
         $form = '<form method="post" action="'.route('captcha').'">';
         $form .= '<input type="hidden" name="_token" value="' . csrf_token() . '">';
