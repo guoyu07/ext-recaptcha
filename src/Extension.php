@@ -8,10 +8,7 @@
  */
 namespace Notadd\BCaptcha;
 
-use Illuminate\Events\Dispatcher;
 use Mews\Captcha\Captcha;
-use Notadd\BCaptcha\Listeners\CsrfTokenRegister;
-use Notadd\BCaptcha\Listeners\RouteRegister;
 use Notadd\BCaptcha\Middlewares\CaptchaMiddleware;
 use Notadd\BCaptcha\Middlewares\SmsMiddleware;
 use Notadd\BCaptcha\Models\Sms;
@@ -23,38 +20,11 @@ use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
 class Extension extends AbstractExtension
 {
     /**
-     * Get script of extension.
-     *
-     * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    public static function script()
-    {
-//        return asset('assets/extensions/notadd/cloud/js/extension.min.js');
-        return '';
-    }
-
-    /**
-     * Get stylesheet of extension.
-     *
-     * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    public static function stylesheet()
-    {
-        return [
-//            asset('assets/extensions/notadd/cloud/css/extension.min.css'),
-        ];
-    }
-
-    /**
      * Boot provider.
      */
     public function boot()
     {
         $this->app->make('router')->aliasMiddleware('captcha', CaptchaMiddleware::class);
-        $this->app->make(Dispatcher::class)->subscribe(CsrfTokenRegister::class);
-        $this->app->make(Dispatcher::class)->subscribe(RouteRegister::class);
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'cloud');
 //        $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
 
@@ -67,17 +37,6 @@ class Extension extends AbstractExtension
         $this->app['validator']->extend('captcha', function ($attribute, $value, $parameters) {
             return captcha_check($value);
         });
-
-    }
-
-    /**
-     * Description of extension
-     *
-     * @return string
-     */
-    public static function description()
-    {
-        return '验证码插件的配置和管理。';
     }
 
     /**
@@ -90,16 +49,6 @@ class Extension extends AbstractExtension
         return function () {
             return true;
         };
-    }
-
-    /**
-     * Name of extension.
-     *
-     * @return string
-     */
-    public static function name()
-    {
-        return '验证码';
     }
 
     public function register()
@@ -130,15 +79,5 @@ class Extension extends AbstractExtension
         return function () {
             return true;
         };
-    }
-
-    /**
-     * Version of extension.
-     *
-     * @return string
-     */
-    public static function version()
-    {
-        return '0.1.0';
     }
 }

@@ -1,0 +1,12 @@
+name: 幻灯片插件
+identification: notadd/slide
+description: 幻灯片插件。
+author:
+    - twilroad
+    - 269044570@qq.com
+version: 0.1.0
+provider: Notadd\Slide\Extension
+events:
+    subscribes:
+        - Notadd\Slide\Listeners\CsrfTokenRegister
+        - Notadd\Slide\Listeners\RouteRegister
