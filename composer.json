@@ -1,0 +1,31 @@
+{
+    "name": "notadd/ext-siteverify",
+    "description": "Notadd Extension for siteverify.",
+    "type": "notadd-extension",
+    "keywords": ["Siteverify", "Verify", "extension", "notadd-extension", "notadd", "Notadd"],
+    "homepage": "https://notadd.com",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Notadd",
+            "email": "notadd@ibenchu.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Notadd\\Siteverify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Notadd\\Siteverify\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "notadd/installers": "0.5.*",
+        "phpunit/phpunit": "~5.7"
+    }
+}

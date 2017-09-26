@@ -1,0 +1,22 @@
+name: 验证码插件
+identification: notadd/ext-siteverify
+description: 验证码管理插件
+author:
+    - Hollydan
+    - 2642956839@qq.com
+version: 0.1.0
+provider: Notadd\Siteverify\Extension
+assets:
+    scripts:
+        - assets/extensions/notadd/siteverify/js/extension.min.js
+    stylesheets:
+        - assets/extensions/notadd/siteverify/css/extension.min.css
+csrf:
+    - 'api/siteverify*'
+events:
+    subscribes:
+        - Notadd\Siteverify\Listeners\RouteRegister
+migrations:
+    - databases/migrations
+publishes:
+    assets/extensions/notadd/navigation: resources/mixes/administration/dist/assets/extensions/notadd/siteverify
