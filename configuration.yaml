@@ -19,4 +19,4 @@ events:
 migrations:
     - databases/migrations
 publishes:
-    assets/extensions/notadd/navigation: resources/mixes/administration/dist/assets/extensions/notadd/siteverify
+    assets/extensions/notadd/siteverify: resources/mixes/administration/dist/assets/extensions/notadd/siteverify

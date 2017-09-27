@@ -10,6 +10,7 @@
 namespace Notadd\Siteverify\Controllers;
 
 use Notadd\Foundation\Routing\Abstracts\Controller;
+use Notadd\Siteverify\Handlers\ShowHandler;
 use Notadd\Siteverify\Handlers\VerifyHandler;
 
 /**
@@ -27,5 +28,4 @@ class VerifyController extends Controller
     {
         return $handler->toResponse()->generateHttpResponse();
     }
-
 }
