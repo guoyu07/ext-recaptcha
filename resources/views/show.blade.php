@@ -9,7 +9,7 @@
     </script>
 </head>
 <body>
-<form id='demo-form' action="{{url('/api/siteverify/verify/set')}}" method="POST">
+<form id='demo-form' action="{{url('/api/siteverify/set')}}" method="POST">
     {{ csrf_field() }}
     <div>
         <label>name</label>

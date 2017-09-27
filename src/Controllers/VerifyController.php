@@ -19,14 +19,13 @@ class VerifyController extends Controller
 {
 
     /**
-     * @param VerifyHandler $verifyHandler
+     * @param VerifyHandler $handler
      * @return \Notadd\Foundation\Passport\Responses\ApiResponse|\Psr\Http\Message\ResponseInterface|\Zend\Diactoros\Response
      * @internal param \Notadd\Slide\Handlers\AllCategoryHandler $allCategoryHandler
-     *
      */
-    public function set(VerifyHandler $verifyHandler)
+    public function set(VerifyHandler $handler)
     {
-        return $verifyHandler->toResponse()->generateHttpResponse();
+        return $handler->toResponse()->generateHttpResponse();
     }
 
 }

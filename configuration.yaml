@@ -8,9 +8,9 @@ version: 0.1.0
 provider: Notadd\Siteverify\Extension
 assets:
     scripts:
-        - assets/extensions/notadd/siteverify/js/extension.min.js
+#        - assets/extensions/notadd/slide/js/extension.min.js
     stylesheets:
-        - assets/extensions/notadd/siteverify/css/extension.min.css
+#        - assets/extensions/notadd/slide/css/extension.min.css
 csrf:
     - 'api/siteverify*'
 events:

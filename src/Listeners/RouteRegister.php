@@ -22,11 +22,8 @@ class RouteRegister extends AbstractRouteRegister
      */
     public function handle()
     {
-            $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/siteverify'], function () {
-
-                $this->router->group(['prefix' => 'verify'],function() {
-                    $this->router->post('set', VerifyController::class.'@set');
-                });
-            });
+        $this->router->group(['middleware' => ['cross', 'web'], 'prefix' => 'api/siteverify'], function () {
+            $this->router->post('set', VerifyController::class.'@set');
+        });
     }
 }

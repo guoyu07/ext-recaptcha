@@ -23,18 +23,19 @@ class Extension extends AbstractExtension
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'siteverify');
         $this->loadViewsFrom(realpath(__DIR__ . '/../resources/views'), 'siteverify');
 
-        \Validator::extend('reCaptcha', function ($attribute, $value, $parameters, $validator) {
+        $validator = $this->app->make('validator');
+        $validator->extend('reCaptcha', function ($attribute, $value, $parameters, $validator) {
 
             $url = "https://www.google.com/recaptcha/api/siteverify";
             $data = [
                 'secret' => '6Le6xDAUAAAAAP_nFiuaHX-inDY3uaGqKWdUa_Gx',
                 'response' => $value,
             ];
-            $content = $this->curlPost($url,$data);
+            $content = $this->curlPost($url, $data);
             $content = json_decode($content);
             return $content->success;
         });
-        \Validator::replacer('reCaptcha', function ($message, $attribute, $rule, $parameters) {
+        $validator->replacer('reCaptcha', function ($message, $attribute, $rule, $parameters) {
             return ' 验证码错误';
         });
     }
@@ -44,7 +45,7 @@ class Extension extends AbstractExtension
      * @param $post_data
      * @return mixed
      */
-    public function curlPost($url,$post_data)
+    public function curlPost($url, $post_data)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
