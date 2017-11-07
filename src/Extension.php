@@ -1,13 +1,17 @@
 <?php
 /**
- * The file is part of Notadd
+ * This file is part of Notadd.
  *
- * @author: Hollydan<2642956839@qq.com>
- * @copyright (c) 2017, notadd.com
- * @datetime: 17-9-15 下午1:54
+ * @author TwilRoad <269044570@qq.com>
+ * @copyright (c) 2017, iBenchu.org
+ * @datetime 2017-02-23 19:36
  */
-namespace Notadd\Siteverify;
+namespace Notadd\BCaptcha;
 
+use Mews\Captcha\Captcha;
+use Notadd\BCaptcha\Middlewares\CaptchaMiddleware;
+use Notadd\BCaptcha\Middlewares\SmsMiddleware;
+use Notadd\BCaptcha\Models\Sms;
 use Notadd\Foundation\Extension\Abstracts\Extension as AbstractExtension;
 
 /**
@@ -20,39 +24,19 @@ class Extension extends AbstractExtension
      */
     public function boot()
     {
-        $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'siteverify');
-        $this->loadViewsFrom(realpath(__DIR__ . '/../resources/views'), 'siteverify');
+        $this->app->make('router')->aliasMiddleware('captcha', CaptchaMiddleware::class);
+        $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/translations'), 'cloud');
+//        $this->loadMigrationsFrom(realpath(__DIR__ . '/../databases/migrations'));
 
-        $validator = $this->app->make('validator');
-        $validator->extend('reCaptcha', function ($attribute, $value, $parameters, $validator) {
+        // Publish configuration files
+        $this->publishes([
+            __DIR__ . '/../vendor/mews/captcha/config/captcha.php' => config_path('captcha.php'),
+        ], 'config');
 
-            $url = "https://www.google.com/recaptcha/api/siteverify";
-            $data = [
-                'secret' => '6Le6xDAUAAAAAP_nFiuaHX-inDY3uaGqKWdUa_Gx',
-                'response' => $value,
-            ];
-            $content = $this->curlPost($url, $data);
-            $content = json_decode($content);
-            return $content->success;
+        // Validator extensions
+        $this->app['validator']->extend('captcha', function ($attribute, $value, $parameters) {
+            return captcha_check($value);
         });
-        $validator->replacer('reCaptcha', function ($message, $attribute, $rule, $parameters) {
-            return ' 验证码错误';
-        });
-    }
-
-    /**
-     * @param $url
-     * @param $post_data
-     * @return mixed
-     */
-    public function curlPost($url, $post_data)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        return $output = curl_exec($ch);
     }
 
     /**
@@ -65,6 +49,24 @@ class Extension extends AbstractExtension
         return function () {
             return true;
         };
+    }
+
+    public function register()
+    {
+        // Merge configs
+        $this->mergeConfigFrom(
+            __DIR__ . '/../vendor/mews/captcha/config/captcha.php', 'captcha'
+        );
+        $this->app->singleton('captcha', function ($app) {
+            return new Captcha(
+                $app['Illuminate\Filesystem\Filesystem'],
+                $app['Illuminate\Config\Repository'],
+                $app['Intervention\Image\ImageManager'],
+                $app['Illuminate\Session\Store'],
+                $app['Illuminate\Hashing\BcryptHasher'],
+                $app['Illuminate\Support\Str']
+            );
+        });
     }
 
     /**
